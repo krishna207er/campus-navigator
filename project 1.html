@@ -1,0 +1,1036 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusNavigator India - College & Course Decision Hub</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js for data visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        navy: {
+                            50: '#f0f4f9',
+                            100: '#d9e3f0',
+                            800: '#1e293b',
+                            900: '#0f172a',
+                            950: '#090d16',
+                        },
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        /* Custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.02);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #334155;
+        }
+        .badge-safe {
+            background-color: #dcfce7;
+            color: #15803d;
+        }
+        .dark .badge-safe {
+            background-color: rgba(22, 101, 52, 0.3);
+            color: #4ade80;
+        }
+        .badge-target {
+            background-color: #fef9c3;
+            color: #a16207;
+        }
+        .dark .badge-target {
+            background-color: rgba(161, 98, 7, 0.3);
+            color: #facc15;
+        }
+        .badge-dream {
+            background-color: #ffe4e6;
+            color: #be123c;
+        }
+        .dark .badge-dream {
+            background-color: rgba(190, 18, 60, 0.3);
+            color: #fb7185;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-200">
+
+    <!-- Top Navigation Header -->
+    <header class="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 lg:px-8 py-3.5 transition-colors">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+            <!-- Brand Logo -->
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 via-indigo-600 to-blue-500 flex items-center justify-center text-white shadow-lg shadow-brand-500/30">
+                    <i class="fa-solid fa-graduation-cap text-lg"></i>
+                </div>
+                <div>
+                    <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-brand-600 to-blue-600 bg-clip-text text-transparent">CampusNavigator</span>
+                    <span class="text-xs px-2 py-0.5 ml-2 font-bold uppercase rounded-full bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300">India 2026</span>
+                </div>
+            </div>
+
+            <!-- Header Actions -->
+            <div class="flex items-center space-x-3">
+                <!-- Theme Toggle Button -->
+                <button id="themeToggle" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                    <i class="fa-solid fa-moon dark:hidden"></i>
+                    <i class="fa-solid fa-sun hidden dark:block text-amber-400"></i>
+                </button>
+                <a href="#predictor" onclick="switchTab('predictor')" class="hidden sm:flex items-center space-x-2 text-xs font-semibold px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white shadow-md shadow-brand-500/20 transition-all">
+                    <i class="fa-solid fa-calculator"></i>
+                    <span>Start Predictor</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Tab Navigation Bar -->
+    <div class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 lg:px-8 sticky top-[65px] z-30">
+        <div class="max-w-7xl mx-auto flex space-x-1 overflow-x-auto no-scrollbar py-2">
+            <button onclick="switchTab('predictor')" id="tab-predictor" class="tab-btn px-4 py-2.5 rounded-xl font-semibold text-sm flex items-center space-x-2 transition-all text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/50">
+                <i class="fa-solid fa-wand-magic-sparkles text-xs"></i>
+                <span>College Predictor</span>
+            </button>
+            <button onclick="switchTab('compare')" id="tab-compare" class="tab-btn px-4 py-2.5 rounded-xl font-semibold text-sm flex items-center space-x-2 transition-all text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">
+                <i class="fa-solid fa-code-compare text-xs"></i>
+                <span>Compare Colleges</span>
+                <span id="compareBadge" class="hidden ml-1 px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-brand-600 text-white">0</span>
+            </button>
+            <button onclick="switchTab('directory')" id="tab-directory" class="tab-btn px-4 py-2.5 rounded-xl font-semibold text-sm flex items-center space-x-2 transition-all text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">
+                <i class="fa-solid fa-building-columns text-xs"></i>
+                <span>College Directory</span>
+            </button>
+            <button onclick="switchTab('guide')" id="tab-guide" class="tab-btn px-4 py-2.5 rounded-xl font-semibold text-sm flex items-center space-x-2 transition-all text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">
+                <i class="fa-solid fa-compass text-xs"></i>
+                <span>Counseling Guide</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto w-full px-4 lg:px-8 py-8 flex-1">
+        
+        <!-- TAB 1: PREDICTOR TAB -->
+        <div id="content-predictor" class="tab-content space-y-8">
+            <!-- Hero Banner -->
+            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white p-6 md:p-10 shadow-2xl border border-slate-800">
+                <div class="relative z-10 max-w-2xl space-y-3">
+                    <span class="px-3 py-1 text-xs font-semibold uppercase tracking-wider bg-brand-500/20 text-brand-300 border border-brand-500/30 rounded-full">AI-Powered Cutoff Analytics</span>
+                    <h2 class="text-2xl md:text-4xl font-extrabold tracking-tight leading-tight">Find Your Best Engineering Fit in India</h2>
+                    <p class="text-slate-300 text-sm md:text-base leading-relaxed">Enter your JEE Main Percentile & 12th Board marks to calculate realistic admission probabilities across 20+ premier IITs, NITs, IIITs, and Top Private Universities.</p>
+                </div>
+                <div class="absolute -right-10 -bottom-10 w-72 h-72 bg-brand-600/20 rounded-full blur-3xl pointer-events-none"></div>
+            </div>
+
+            <!-- Predictor Grid: Form + Results -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                
+                <!-- Left Form Panel -->
+                <div class="lg:col-span-4 bg-white dark:bg-slate-800/80 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-5 sticky top-36">
+                    <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-700/60 pb-3">
+                        <h3 class="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                            <i class="fa-solid fa-sliders text-brand-600"></i> Your Score Profile
+                        </h3>
+                        <button type="button" onclick="resetForm()" class="text-xs text-brand-600 dark:text-brand-400 font-semibold hover:underline">Reset</button>
+                    </div>
+
+                    <form id="predictorForm" onsubmit="event.preventDefault(); runPredictor();" class="space-y-4">
+                        
+                        <!-- JEE Percentile -->
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">JEE Main Percentile</label>
+                            <div class="relative">
+                                <input type="number" id="inputJee" min="0" max="100" step="0.01" value="95.5" required
+                                    class="w-full pl-3.5 pr-10 py-2.5 text-sm font-semibold rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500 text-slate-900 dark:text-slate-100">
+                                <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">%ile</span>
+                            </div>
+                            <span class="text-[11px] text-slate-400 mt-1 block">Approx Rank: <strong id="approxRankDisplay" class="text-slate-600 dark:text-slate-300">~67,500</strong></span>
+                        </div>
+
+                        <!-- 12th Board Percentage -->
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">12th Board Score (% PCM)</label>
+                            <div class="relative">
+                                <input type="number" id="inputBoard" min="0" max="100" step="0.1" value="88.5" required
+                                    class="w-full pl-3.5 pr-10 py-2.5 text-sm font-semibold rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500 text-slate-900 dark:text-slate-100">
+                                <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">%</span>
+                            </div>
+                        </div>
+
+                        <!-- Reservation Category -->
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Reservation Category</label>
+                            <select id="inputCategory" class="w-full px-3.5 py-2.5 text-sm font-semibold rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500 text-slate-900 dark:text-slate-100">
+                                <option value="OPEN">General (OPEN)</option>
+                                <option value="EWS">GEN-EWS</option>
+                                <option value="OBC-NCL">OBC-NCL</option>
+                                <option value="SC">Scheduled Caste (SC)</option>
+                                <option value="ST">Scheduled Tribe (ST)</option>
+                            </select>
+                        </div>
+
+                        <!-- Home State Domicile -->
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Home State (Domicile Quota)</label>
+                            <select id="inputState" class="w-full px-3.5 py-2.5 text-sm font-semibold rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500 text-slate-900 dark:text-slate-100">
+                                <option value="Maharashtra">Maharashtra</option>
+                                <option value="Delhi">Delhi / NCR</option>
+                                <option value="Karnataka">Karnataka</option>
+                                <option value="Tamil Nadu">Tamil Nadu</option>
+                                <option value="Telangana">Telangana / AP</option>
+                                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                <option value="Rajasthan">Rajasthan</option>
+                                <option value="West Bengal">West Bengal</option>
+                                <option value="Other">Other States</option>
+                            </select>
+                        </div>
+
+                        <!-- Preferred Engineering Branches -->
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">Preferred Branches</label>
+                            <div class="grid grid-cols-2 gap-2 text-xs">
+                                <label class="flex items-center space-x-2 p-2 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 cursor-pointer">
+                                    <input type="checkbox" value="CSE" checked class="branch-checkbox rounded text-brand-600 focus:ring-brand-500">
+                                    <span>CS & IT</span>
+                                </label>
+                                <label class="flex items-center space-x-2 p-2 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 cursor-pointer">
+                                    <input type="checkbox" value="AI-DS" checked class="branch-checkbox rounded text-brand-600 focus:ring-brand-500">
+                                    <span>AI / Data Sci</span>
+                                </label>
+                                <label class="flex items-center space-x-2 p-2 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 cursor-pointer">
+                                    <input type="checkbox" value="ECE" checked class="branch-checkbox rounded text-brand-600 focus:ring-brand-500">
+                                    <span>ECE / EEE</span>
+                                </label>
+                                <label class="flex items-center space-x-2 p-2 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 cursor-pointer">
+                                    <input type="checkbox" value="MECH" class="branch-checkbox rounded text-brand-600 focus:ring-brand-500">
+                                    <span>Mechanical</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-brand-600 to-blue-600 hover:from-brand-700 hover:to-blue-700 text-white font-bold text-sm shadow-lg shadow-brand-500/25 flex items-center justify-center space-x-2 transition-all">
+                            <i class="fa-solid fa-calculator"></i>
+                            <span>Predict College Chances</span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Right Prediction Output Panel -->
+                <div class="lg:col-span-8 space-y-6">
+                    
+                    <!-- Summary Stats Banner -->
+                    <div class="grid grid-cols-3 gap-3">
+                        <div class="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 text-center">
+                            <span class="text-xs font-semibold text-emerald-600 dark:text-emerald-400 block uppercase">High Chance (Safe)</span>
+                            <span id="safeCount" class="text-2xl font-extrabold text-emerald-700 dark:text-emerald-300">0</span>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 text-center">
+                            <span class="text-xs font-semibold text-amber-600 dark:text-amber-400 block uppercase">Moderate (Target)</span>
+                            <span id="targetCount" class="text-2xl font-extrabold text-amber-700 dark:text-amber-300">0</span>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800 text-center">
+                            <span class="text-xs font-semibold text-rose-600 dark:text-rose-400 block uppercase">Dream (Reach)</span>
+                            <span id="dreamCount" class="text-2xl font-extrabold text-rose-700 dark:text-rose-300">0</span>
+                        </div>
+                    </div>
+
+                    <!-- Chance Filter Tabs -->
+                    <div class="flex items-center justify-between flex-wrap gap-2">
+                        <div class="flex items-center space-x-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl text-xs font-medium">
+                            <button onclick="filterChance('ALL')" id="chance-ALL" class="chance-tab px-3 py-1.5 rounded-lg bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-100 shadow-sm">All Matches</button>
+                            <button onclick="filterChance('HIGH')" id="chance-HIGH" class="chance-tab px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400">High (Safe)</button>
+                            <button onclick="filterChance('MODERATE')" id="chance-MODERATE" class="chance-tab px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400">Moderate</button>
+                            <button onclick="filterChance('LOW')" id="chance-LOW" class="chance-tab px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400">Dream</button>
+                        </div>
+
+                        <span class="text-xs text-slate-400" id="resultCountLabel">Showing matches</span>
+                    </div>
+
+                    <!-- Predicted Cards Container -->
+                    <div id="predictedList" class="space-y-4">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- TAB 2: COMPARE COLLEGES TAB -->
+        <div id="content-compare" class="tab-content hidden space-y-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800">
+                <div>
+                    <h2 class="text-xl font-extrabold text-slate-900 dark:text-slate-100">Side-by-Side University Comparison</h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Distinguish cutoffs, placements, NIRF ratings, and tuition fees across up to 3 selected universities.</p>
+                </div>
+                <button onclick="clearCompareList()" class="px-3.5 py-2 text-xs font-semibold rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-rose-50 hover:text-rose-600 dark:hover:bg-rose-900/30 transition-colors">
+                    <i class="fa-solid fa-trash-can mr-1"></i> Clear Selection
+                </button>
+            </div>
+
+            <!-- Comparison Matrix Container -->
+            <div id="compareMatrixContainer" class="overflow-x-auto rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm bg-white dark:bg-slate-800/80">
+                <!-- Rendered dynamically -->
+            </div>
+        </div>
+
+        <!-- TAB 3: COLLEGE DIRECTORY TAB -->
+        <div id="content-directory" class="tab-content hidden space-y-6">
+            
+            <!-- Filters & Search Toolbar -->
+            <div class="bg-white dark:bg-slate-800 p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-4">
+                <div class="flex flex-col md:flex-row gap-3">
+                    <div class="relative flex-1">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                        <input type="text" id="directorySearch" onkeyup="filterDirectory()" placeholder="Search by college name, city or branch..."
+                               class="w-full pl-10 pr-4 py-2.5 text-sm rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500">
+                    </div>
+                    
+                    <!-- Filters -->
+                    <div class="flex flex-wrap gap-2">
+                        <select id="typeFilter" onchange="filterDirectory()" class="px-3 py-2 text-xs font-semibold rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700">
+                            <option value="ALL">All Types (IIT/NIT/Private)</option>
+                            <option value="IIT">IITs Only</option>
+                            <option value="NIT">NITs Only</option>
+                            <option value="IIIT">IIITs Only</option>
+                            <option value="Private">Private Universities</option>
+                            <option value="State">State Govt Colleges</option>
+                        </select>
+
+                        <select id="sortFilter" onchange="filterDirectory()" class="px-3 py-2 text-xs font-semibold rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700">
+                            <option value="nirf">Sort by NIRF Rank</option>
+                            <option value="package">Sort by Avg Placement</option>
+                            <option value="fee">Sort by Total Fees</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- College Directory Cards -->
+            <div id="directoryGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Dynamically Populated -->
+            </div>
+        </div>
+
+        <!-- TAB 4: COUNSELING & DECISION GUIDE -->
+        <div id="content-guide" class="tab-content hidden space-y-8">
+            <div class="bg-white dark:bg-slate-800 p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-6">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-slate-100">Indian Engineering Counseling & Decision Framework</h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Navigate JoSAA, CSAB, JAC Delhi, and State Quotas with clear strategic insights.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="p-5 rounded-2xl bg-brand-50 dark:bg-brand-950/40 border border-brand-100 dark:border-brand-900/50 space-y-2">
+                        <div class="w-8 h-8 rounded-lg bg-brand-600 text-white flex items-center justify-center font-bold text-sm">1</div>
+                        <h3 class="font-bold text-slate-900 dark:text-slate-100 text-sm">JoSAA / CSAB Strategy</h3>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">Fill choices strictly in order of personal preference regardless of cutoffs. Always rank top branch at preferred NIT/IIIT above lower branches at average NITs.</p>
+                    </div>
+                    <div class="p-5 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/50 space-y-2">
+                        <div class="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold text-sm">2</div>
+                        <h3 class="font-bold text-slate-900 dark:text-slate-100 text-sm">Home State Advantage</h3>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">50% seats in NITs and State Universities are reserved for state candidates. Cutoffs are significantly relaxed for Home State candidates in rounds 5-6.</p>
+                    </div>
+                    <div class="p-5 rounded-2xl bg-blue-50 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900/50 space-y-2">
+                        <div class="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-sm">3</div>
+                        <h3 class="font-bold text-slate-900 dark:text-slate-100 text-sm">ROI vs Campus Brand</h3>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">Evaluate total fee vs average placement. Top private universities (BITS, VIT) offer stellar placements but require higher tuition than government subsidised NITs.</p>
+                    </div>
+                </div>
+
+                <!-- Decision Flowchart Checklist -->
+                <div class="border-t border-slate-100 dark:border-slate-700/60 pt-6 space-y-4">
+                    <h3 class="text-base font-bold text-slate-900 dark:text-slate-100">Choice Filling Checklist</h3>
+                    <div class="space-y-2 text-xs">
+                        <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+                            <input type="checkbox" checked class="rounded text-brand-600 focus:ring-brand-500 w-4 h-4">
+                            <span class="text-slate-700 dark:text-slate-300">Verify Category Certificate validity (Issued after April 1 for OBC-NCL & EWS).</span>
+                        </label>
+                        <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+                            <input type="checkbox" checked class="rounded text-brand-600 focus:ring-brand-500 w-4 h-4">
+                            <span class="text-slate-700 dark:text-slate-300">Cross-check 75% eligibility aggregate in 12th Board PCM examinations for JoSAA.</span>
+                        </label>
+                        <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+                            <input type="checkbox" class="rounded text-brand-600 focus:ring-brand-500 w-4 h-4">
+                            <span class="text-slate-700 dark:text-slate-300">Lock minimum 150+ choices in JoSAA portal before final deadline.</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Detail Modal Drawer -->
+    <div id="detailModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm hidden opacity-0 transition-opacity duration-200">
+        <div id="modalCard" class="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto transform scale-95 transition-transform duration-200 p-6 space-y-6">
+            <!-- Modal Header -->
+            <div class="flex items-start justify-between border-b border-slate-100 dark:border-slate-700/60 pb-4">
+                <div class="space-y-1">
+                    <span id="modalTypeBadge" class="px-2.5 py-0.5 text-[10px] font-bold rounded-full bg-brand-100 text-brand-700 dark:bg-brand-900/50 dark:text-brand-300">IIT</span>
+                    <h2 id="modalCollegeName" class="text-xl font-extrabold text-slate-900 dark:text-slate-100">University Title</h2>
+                    <p id="modalLocation" class="text-xs text-slate-500 dark:text-slate-400"><i class="fa-solid fa-location-dot text-brand-500 mr-1"></i> Location</p>
+                </div>
+                <button onclick="closeModal()" class="p-2 rounded-xl text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+                <div class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200/60 dark:border-slate-700">
+                    <span class="text-[10px] font-semibold text-slate-400 uppercase block">NIRF Rank</span>
+                    <span id="modalNIRF" class="text-lg font-bold text-slate-800 dark:text-slate-100">#0</span>
+                </div>
+                <div class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200/60 dark:border-slate-700">
+                    <span class="text-[10px] font-semibold text-slate-400 uppercase block">Avg Package</span>
+                    <span id="modalAvgPkg" class="text-lg font-bold text-emerald-600 dark:text-emerald-400">₹0 LPA</span>
+                </div>
+                <div class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200/60 dark:border-slate-700">
+                    <span class="text-[10px] font-semibold text-slate-400 uppercase block">Total Fees</span>
+                    <span id="modalFees" class="text-lg font-bold text-slate-800 dark:text-slate-100">₹0 Lakhs</span>
+                </div>
+                <div class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200/60 dark:border-slate-700">
+                    <span class="text-[10px] font-semibold text-slate-400 uppercase block">Admission Via</span>
+                    <span id="modalPathway" class="text-sm font-bold text-brand-600 dark:text-brand-400 mt-1 block">JoSAA</span>
+                </div>
+            </div>
+
+            <!-- Chart / Breakdown section -->
+            <div class="space-y-2">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Cutoff Percentiles & Branches</h3>
+                <div id="modalCutoffsList" class="space-y-2 text-xs">
+                    <!-- Cutoff rows -->
+                </div>
+            </div>
+
+            <!-- Top Recruiters -->
+            <div class="space-y-2">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Top Campus Recruiters</h3>
+                <div id="modalRecruiters" class="flex flex-wrap gap-1.5">
+                    <!-- Badges -->
+                </div>
+            </div>
+
+            <!-- Modal Footer Actions -->
+            <div class="flex items-center justify-end space-x-3 pt-4 border-t border-slate-100 dark:border-slate-700/60">
+                <button id="modalCompareBtn" onclick="" class="px-4 py-2 text-xs font-semibold rounded-xl bg-brand-50 text-brand-600 hover:bg-brand-100 dark:bg-brand-950 dark:text-brand-300 transition-colors">
+                    Add to Compare
+                </button>
+                <button onclick="closeModal()" class="px-4 py-2 text-xs font-semibold rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 transition-colors">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // MOCK DATABASE OF INDIAN ENGINEERING COLLEGES
+        const collegeDatabase = [
+            {
+                id: 'iitb',
+                name: 'IIT Bombay - Indian Institute of Technology',
+                shortName: 'IIT Bombay',
+                type: 'IIT',
+                location: 'Mumbai, Maharashtra',
+                state: 'Maharashtra',
+                nirf: 3,
+                avgPackage: 23.5,
+                highestPackage: 1.68, // Crores converted to relative
+                fees: 10.5, // Total 4 Year fees in Lakhs
+                pathway: 'JEE Advanced / JoSAA',
+                recruiters: ['Google', 'Microsoft', 'Qualcomm', 'Apple', 'Texas Instruments'],
+                cutoffs: {
+                    'CSE': { OPEN: 99.98, 'OBC-NCL': 99.95, SC: 99.8, ST: 99.5 },
+                    'AI-DS': { OPEN: 99.95, 'OBC-NCL': 99.90, SC: 99.7, ST: 99.4 },
+                    'ECE': { OPEN: 99.90, 'OBC-NCL': 99.85, SC: 99.5, ST: 99.0 },
+                    'MECH': { OPEN: 99.70, 'OBC-NCL': 99.50, SC: 98.8, ST: 98.2 }
+                }
+            },
+            {
+                id: 'iitd',
+                name: 'IIT Delhi - Indian Institute of Technology',
+                shortName: 'IIT Delhi',
+                type: 'IIT',
+                location: 'New Delhi, Delhi',
+                state: 'Delhi',
+                nirf: 2,
+                avgPackage: 22.8,
+                highestPackage: 2.0,
+                fees: 10.2,
+                pathway: 'JEE Advanced / JoSAA',
+                recruiters: ['Microsoft', 'Goldman Sachs', 'Uber', 'Intel', 'Bain & Co'],
+                cutoffs: {
+                    'CSE': { OPEN: 99.97, 'OBC-NCL': 99.94, SC: 99.78, ST: 99.45 },
+                    'ECE': { OPEN: 99.88, 'OBC-NCL': 99.80, SC: 99.4, ST: 98.9 },
+                    'MECH': { OPEN: 99.65, 'OBC-NCL': 99.45, SC: 98.7, ST: 98.0 }
+                }
+            },
+            {
+                id: 'nitt',
+                name: 'NIT Trichy - National Institute of Technology',
+                shortName: 'NIT Trichy',
+                type: 'NIT',
+                location: 'Tiruchirappalli, Tamil Nadu',
+                state: 'Tamil Nadu',
+                nirf: 9,
+                avgPackage: 15.6,
+                highestPackage: 0.52,
+                fees: 6.8,
+                pathway: 'JEE Main / JoSAA / CSAB',
+                recruiters: ['Amazon', 'Samsung', 'Oracle', 'TATA Steel', 'L&T'],
+                cutoffs: {
+                    'CSE': { OPEN: 99.6, 'OBC-NCL': 99.2, SC: 98.0, ST: 96.5 },
+                    'AI-DS': { OPEN: 99.4, 'OBC-NCL': 99.0, SC: 97.6, ST: 96.0 },
+                    'ECE': { OPEN: 99.1, 'OBC-NCL': 98.5, SC: 96.8, ST: 95.0 },
+                    'MECH': { OPEN: 97.8, 'OBC-NCL': 96.5, SC: 93.0, ST: 90.0 }
+                }
+            },
+            {
+                id: 'vnit',
+                name: 'VNIT Nagpur - Visvesvaraya National Institute of Technology',
+                shortName: 'VNIT Nagpur',
+                type: 'NIT',
+                location: 'Nagpur, Maharashtra',
+                state: 'Maharashtra',
+                nirf: 41,
+                avgPackage: 11.8,
+                highestPackage: 0.64,
+                fees: 6.2,
+                pathway: 'JEE Main / JoSAA',
+                recruiters: ['Goldman Sachs', 'JPMC', 'Siemens', 'ExxonMobil', 'Capgemini'],
+                cutoffs: {
+                    'CSE': { OPEN: 98.8, 'OBC-NCL': 98.1, SC: 95.5, ST: 93.0 },
+                    'ECE': { OPEN: 97.8, 'OBC-NCL': 96.8, SC: 93.5, ST: 90.0 },
+                    'MECH': { OPEN: 95.5, 'OBC-NCL': 93.8, SC: 88.0, ST: 84.0 }
+                }
+            },
+            {
+                id: 'iiith',
+                name: 'IIIT Hyderabad - International Institute of Information Technology',
+                shortName: 'IIIT Hyderabad',
+                type: 'IIIT',
+                location: 'Hyderabad, Telangana',
+                state: 'Telangana',
+                nirf: 55,
+                avgPackage: 32.2,
+                highestPackage: 1.02,
+                fees: 18.0,
+                pathway: 'JEE Main Marks / SPEC / UGEE',
+                recruiters: ['Meta', 'Google', 'Apple', 'NVIDIA', 'Bloomberg'],
+                cutoffs: {
+                    'CSE': { OPEN: 99.85, 'OBC-NCL': 99.85, SC: 99.85, ST: 99.85 },
+                    'ECE': { OPEN: 99.40, 'OBC-NCL': 99.40, SC: 99.40, ST: 99.40 }
+                }
+            },
+            {
+                id: 'dtu',
+                name: 'DTU - Delhi Technological University',
+                shortName: 'DTU Delhi',
+                type: 'State',
+                location: 'New Delhi, Delhi',
+                state: 'Delhi',
+                nirf: 29,
+                avgPackage: 15.4,
+                highestPackage: 0.82,
+                fees: 8.5,
+                pathway: 'JEE Main / JAC Delhi Counseling',
+                recruiters: ['Amazon', 'Adobe', 'Atlassian', 'Sprinklr', 'Paytm'],
+                cutoffs: {
+                    'CSE': { OPEN: 98.9, 'OBC-NCL': 96.5, SC: 90.0, ST: 82.0 },
+                    'AI-DS': { OPEN: 98.6, 'OBC-NCL': 95.8, SC: 89.0, ST: 80.0 },
+                    'ECE': { OPEN: 97.5, 'OBC-NCL': 94.0, SC: 85.0, ST: 75.0 },
+                    'MECH': { OPEN: 94.5, 'OBC-NCL': 88.0, SC: 78.0, ST: 68.0 }
+                }
+            },
+            {
+                id: 'coep',
+                name: 'COEP Technological University',
+                shortName: 'COEP Pune',
+                type: 'State',
+                location: 'Pune, Maharashtra',
+                state: 'Maharashtra',
+                nirf: 73,
+                avgPackage: 11.2,
+                highestPackage: 0.50,
+                fees: 5.4,
+                pathway: 'MHT-CET / JEE Main / CAP Rounds',
+                recruiters: ['TATA Motors', 'Mastercard', 'Aker Solutions', 'Barclays', 'BAJAJ'],
+                cutoffs: {
+                    'CSE': { OPEN: 98.2, 'OBC-NCL': 97.0, SC: 92.0, ST: 85.0 },
+                    'ECE': { OPEN: 96.8, 'OBC-NCL': 95.2, SC: 89.0, ST: 80.0 },
+                    'MECH': { OPEN: 94.0, 'OBC-NCL': 91.5, SC: 82.0, ST: 72.0 }
+                }
+            },
+            {
+                id: 'bitsp',
+                name: 'BITS Pilani - Birla Institute of Technology & Science',
+                shortName: 'BITS Pilani',
+                type: 'Private',
+                location: 'Pilani, Rajasthan',
+                state: 'Rajasthan',
+                nirf: 25,
+                avgPackage: 20.8,
+                highestPackage: 0.90,
+                fees: 22.5,
+                pathway: 'BITSAT Examination',
+                recruiters: ['McKinsey', 'Google', 'DE Shaw', 'Texas Instruments', 'Schlumberger'],
+                cutoffs: {
+                    'CSE': { OPEN: 97.5, 'OBC-NCL': 97.5, SC: 97.5, ST: 97.5 },
+                    'ECE': { OPEN: 95.0, 'OBC-NCL': 95.0, SC: 95.0, ST: 95.0 },
+                    'MECH': { OPEN: 90.0, 'OBC-NCL': 90.0, SC: 90.0, ST: 90.0 }
+                }
+            },
+            {
+                id: 'vit',
+                name: 'VIT Vellore - Vellore Institute of Technology',
+                shortName: 'VIT Vellore',
+                type: 'Private',
+                location: 'Vellore, Tamil Nadu',
+                state: 'Tamil Nadu',
+                nirf: 11,
+                avgPackage: 9.2,
+                highestPackage: 1.02,
+                fees: 7.8,
+                pathway: 'VITEEE Entrance Test',
+                recruiters: ['Cognizant', 'TCS Digital', 'Deloitte', 'Wipro', 'Microsoft'],
+                cutoffs: {
+                    'CSE': { OPEN: 90.0, 'OBC-NCL': 90.0, SC: 85.0, ST: 80.0 },
+                    'AI-DS': { OPEN: 88.0, 'OBC-NCL': 88.0, SC: 82.0, ST: 78.0 },
+                    'ECE': { OPEN: 82.0, 'OBC-NCL': 82.0, SC: 75.0, ST: 70.0 },
+                    'MECH': { OPEN: 75.0, 'OBC-NCL': 75.0, SC: 65.0, ST: 60.0 }
+                }
+            },
+            {
+                id: 'thapar',
+                name: 'Thapar Institute of Engineering & Technology',
+                shortName: 'Thapar Patiala',
+                type: 'Private',
+                location: 'Patiala, Punjab',
+                state: 'Punjab',
+                nirf: 20,
+                avgPackage: 10.8,
+                highestPackage: 0.55,
+                fees: 16.5,
+                pathway: 'JEE Main Score / 12th PCM Boards',
+                recruiters: ['Zomato', 'MakeMyTrip', 'Amdocs', 'Schneider', 'IBM'],
+                cutoffs: {
+                    'CSE': { OPEN: 93.5, 'OBC-NCL': 93.5, SC: 85.0, ST: 80.0 },
+                    'ECE': { OPEN: 86.0, 'OBC-NCL': 86.0, SC: 78.0, ST: 72.0 }
+                }
+            }
+        ];
+
+        // GLOBAL APP STATE
+        let compareList = ['iitb', 'nitt'];
+        let activeChanceFilter = 'ALL';
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('text-brand-600', 'dark:text-brand-400', 'bg-brand-50', 'dark:bg-brand-950/50');
+                btn.classList.add('text-slate-600', 'dark:text-slate-400');
+            });
+
+            document.getElementById(`content-${tabId}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`tab-${tabId}`);
+            activeBtn.classList.add('text-brand-600', 'dark:text-brand-400', 'bg-brand-50', 'dark:bg-brand-950/50');
+
+            if (tabId === 'compare') renderCompareMatrix();
+            if (tabId === 'directory') filterDirectory();
+        }
+
+        // Rank Estimation Helper
+        document.getElementById('inputJee').addEventListener('input', (e) => {
+            const perc = parseFloat(e.target.value) || 0;
+            const approxRank = Math.round((100 - perc) * 15000); // Based on ~15 Lakh candidates
+            document.getElementById('approxRankDisplay').innerText = `~${approxRank.toLocaleString('en-IN')}`;
+        });
+
+        function runPredictor() {
+            const percentile = parseFloat(document.getElementById('inputJee').value) || 0;
+            const category = document.getElementById('inputCategory').value;
+            const homeState = document.getElementById('inputState').value;
+            
+            // Collect checked branches
+            const checkedBranches = Array.from(document.querySelectorAll('.branch-checkbox:checked')).map(cb => cb.value);
+
+            let safeCount = 0;
+            let targetCount = 0;
+            let dreamCount = 0;
+
+            const results = [];
+
+            collegeDatabase.forEach(college => {
+                // Check domicile relaxed cutoff boost
+                const isHomeState = college.state === homeState;
+                const stateBonus = isHomeState ? 1.5 : 0.0; // Home state cutoff reduction
+
+                Object.keys(college.cutoffs).forEach(branch => {
+                    // Filter by user preference if selected
+                    if (checkedBranches.length > 0 && !checkedBranches.includes(branch)) return;
+
+                    const baseCutoff = college.cutoffs[branch][category] || college.cutoffs[branch]['OPEN'];
+                    const effectiveCutoff = Math.max(0, baseCutoff - stateBonus);
+
+                    let chance = 'LOW';
+                    let chanceLabel = 'Dream (Reach)';
+                    let chanceBadgeClass = 'badge-dream';
+
+                    const diff = percentile - effectiveCutoff;
+
+                    if (diff >= 1.2) {
+                        chance = 'HIGH';
+                        chanceLabel = 'High Chance (Safe)';
+                        chanceBadgeClass = 'badge-safe';
+                        safeCount++;
+                    } else if (diff >= -0.8) {
+                        chance = 'MODERATE';
+                        chanceLabel = 'Moderate Chance';
+                        chanceBadgeClass = 'badge-target';
+                        targetCount++;
+                    } else if (diff >= -5.0) {
+                        chance = 'LOW';
+                        chanceLabel = 'Low / Spot Round';
+                        chanceBadgeClass = 'badge-dream';
+                        dreamCount++;
+                    } else {
+                        return; // Out of reasonable cutoff range
+                    }
+
+                    results.push({
+                        college,
+                        branch,
+                        effectiveCutoff,
+                        chance,
+                        chanceLabel,
+                        chanceBadgeClass,
+                        isHomeState
+                    });
+                });
+            });
+
+            // Update Counts Summary
+            document.getElementById('safeCount').innerText = safeCount;
+            document.getElementById('targetCount').innerText = targetCount;
+            document.getElementById('dreamCount').innerText = dreamCount;
+
+            renderPredictedList(results);
+        }
+
+        function filterChance(chanceType) {
+            activeChanceFilter = chanceType;
+            document.querySelectorAll('.chance-tab').forEach(btn => {
+                btn.classList.remove('bg-white', 'dark:bg-slate-700', 'text-slate-800', 'dark:text-slate-100', 'shadow-sm');
+            });
+            document.getElementById(`chance-${chanceType}`).classList.add('bg-white', 'dark:bg-slate-700', 'text-slate-800', 'dark:text-slate-100', 'shadow-sm');
+            runPredictor();
+        }
+
+        function renderPredictedList(results) {
+            const container = document.getElementById('predictedList');
+            container.innerHTML = '';
+
+            const filtered = results.filter(res => activeChanceFilter === 'ALL' || res.chance === activeChanceFilter);
+            document.getElementById('resultCountLabel').innerText = `Showing ${filtered.length} predicted options`;
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="p-8 text-center bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-800">
+                        <i class="fa-solid fa-graduation-cap text-3xl text-slate-300 mb-2 block"></i>
+                        <p class="text-sm font-semibold text-slate-600 dark:text-slate-300">No college options matched your exact range.</p>
+                        <p class="text-xs text-slate-400 mt-1">Try tweaking your cutoff filters or selecting more branches.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.forEach(item => {
+                const isCompared = compareList.includes(item.college.id);
+                
+                const card = document.createElement('div');
+                card.className = "p-5 rounded-2xl bg-white dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-800 shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row md:items-center justify-between gap-4";
+                
+                card.innerHTML = `
+                    <div class="space-y-1.5 flex-1">
+                        <div class="flex items-center space-x-2 flex-wrap gap-y-1">
+                            <span class="px-2.5 py-0.5 text-[11px] font-bold rounded-full ${item.chanceBadgeClass}">${item.chanceLabel}</span>
+                            <span class="text-xs font-bold text-slate-400">NIRF #${item.college.nirf}</span>
+                            ${item.isHomeState ? `<span class="text-[10px] bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300 px-2 py-0.5 font-bold rounded-md">Home State Quota</span>` : ''}
+                        </div>
+                        <h4 class="text-base font-extrabold text-slate-900 dark:text-slate-100">${item.college.name}</h4>
+                        <p class="text-xs font-semibold text-brand-600 dark:text-brand-400 flex items-center gap-1.5">
+                            <i class="fa-solid fa-microchip"></i> Recommended Branch: <strong>${item.branch}</strong>
+                        </p>
+                        <div class="flex items-center space-x-4 text-xs text-slate-500 dark:text-slate-400 pt-1">
+                            <span><i class="fa-solid fa-sack-dollar text-emerald-500 mr-1"></i>Avg: ₹${item.college.avgPackage} LPA</span>
+                            <span><i class="fa-solid fa-building-columns mr-1"></i>Fees: ₹${item.college.fees}L</span>
+                            <span><i class="fa-solid fa-location-dot mr-1"></i>${item.college.location}</span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center space-x-2 border-t md:border-t-0 pt-3 md:pt-0 border-slate-100 dark:border-slate-700">
+                        <button onclick="toggleCompare('${item.college.id}')" class="px-3 py-2 text-xs font-bold rounded-xl ${isCompared ? 'bg-indigo-600 text-white' : 'bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 text-slate-700 dark:text-slate-200'} transition-colors">
+                            <i class="fa-solid ${isCompared ? 'fa-check' : 'fa-plus'} mr-1"></i> ${isCompared ? 'In Compare' : 'Compare'}
+                        </button>
+                        <button onclick="openModal('${item.college.id}')" class="px-3.5 py-2 text-xs font-bold rounded-xl bg-brand-600 hover:bg-brand-700 text-white shadow-sm transition-colors">
+                            Details
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function toggleCompare(collegeId) {
+            if (compareList.includes(collegeId)) {
+                compareList = compareList.filter(id => id !== collegeId);
+            } else {
+                if (compareList.length >= 3) {
+                    alert('You can compare a maximum of 3 colleges side by side.');
+                    return;
+                }
+                compareList.push(collegeId);
+            }
+            updateCompareBadge();
+            runPredictor();
+        }
+
+        function clearCompareList() {
+            compareList = [];
+            updateCompareBadge();
+            renderCompareMatrix();
+        }
+
+        function updateCompareBadge() {
+            const badge = document.getElementById('compareBadge');
+            badge.innerText = compareList.length;
+            if (compareList.length > 0) badge.classList.remove('hidden');
+            else badge.classList.add('hidden');
+        }
+
+        function renderCompareMatrix() {
+            const container = document.getElementById('compareMatrixContainer');
+            if (compareList.length === 0) {
+                container.innerHTML = `
+                    <div class="p-12 text-center space-y-3">
+                        <i class="fa-solid fa-code-compare text-4xl text-slate-300"></i>
+                        <p class="text-sm font-semibold text-slate-600 dark:text-slate-300">No colleges selected for comparison.</p>
+                        <p class="text-xs text-slate-400">Add colleges from the Predictor or Directory tabs to distinguish features.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const colleges = compareList.map(id => collegeDatabase.find(c => c.id === id));
+
+            container.innerHTML = `
+                <table class="w-full text-left text-xs border-collapse">
+                    <thead>
+                        <tr class="bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+                            <th class="p-4 font-bold text-slate-500 uppercase tracking-wider w-1/4">Feature / Metric</th>
+                            ${colleges.map(c => `
+                                <th class="p-4 font-extrabold text-slate-900 dark:text-slate-100 text-sm">
+                                    <div class="flex items-center justify-between">
+                                        <span>${c.shortName}</span>
+                                        <button onclick="toggleCompare('${c.id}'); renderCompareMatrix();" class="text-slate-400 hover:text-rose-500"><i class="fa-solid fa-xmark"></i></button>
+                                    </div>
+                                </th>
+                            `).join('')}
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                        <tr>
+                            <td class="p-4 font-bold text-slate-500">Institute Category</td>
+                            ${colleges.map(c => `<td class="p-4 font-semibold text-brand-600 dark:text-brand-400">${c.type}</td>`).join('')}
+                        </tr>
+                        <tr>
+                            <td class="p-4 font-bold text-slate-500">NIRF National Rank</td>
+                            ${colleges.map(c => `<td class="p-4 font-bold text-slate-800 dark:text-slate-200">#${c.nirf}</td>`).join('')}
+                        </tr>
+                        <tr>
+                            <td class="p-4 font-bold text-slate-500">Average Placement</td>
+                            ${colleges.map(c => `<td class="p-4 font-bold text-emerald-600 dark:text-emerald-400">₹${c.avgPackage} LPA</td>`).join('')}
+                        </tr>
+                        <tr>
+                            <td class="p-4 font-bold text-slate-500">Highest Salary Offer</td>
+                            ${colleges.map(c => `<td class="p-4 font-semibold">₹${c.highestPackage} Cr/Yr</td>`).join('')}
+                        </tr>
+                        <tr>
+                            <td class="p-4 font-bold text-slate-500">4-Year Total Fees</td>
+                            ${colleges.map(c => `<td class="p-4 font-semibold text-slate-700 dark:text-slate-300">₹${c.fees} Lakhs</td>`).join('')}
+                        </tr>
+                        <tr>
+                            <td class="p-4 font-bold text-slate-500">Location / Domicile</td>
+                            ${colleges.map(c => `<td class="p-4 text-slate-600 dark:text-slate-400">${c.location}</td>`).join('')}
+                        </tr>
+                        <tr>
+                            <td class="p-4 font-bold text-slate-500">Top Campus Recruiters</td>
+                            ${colleges.map(c => `<td class="p-4 font-medium text-slate-600 dark:text-slate-400">${c.recruiters.join(', ')}</td>`).join('')}
+                        </tr>
+                        <tr>
+                            <td class="p-4 font-bold text-slate-500">Admission Pathway</td>
+                            ${colleges.map(c => `<td class="p-4 font-bold text-brand-600 dark:text-brand-400">${c.pathway}</td>`).join('')}
+                        </tr>
+                    </tbody>
+                </table>
+            `;
+        }
+
+        function filterDirectory() {
+            const query = document.getElementById('directorySearch').value.toLowerCase();
+            const typeVal = document.getElementById('typeFilter').value;
+            const sortVal = document.getElementById('sortFilter').value;
+
+            let filtered = collegeDatabase.filter(c => {
+                const matchesSearch = c.name.toLowerCase().includes(query) || c.location.toLowerCase().includes(query);
+                const matchesType = typeVal === 'ALL' || c.type === typeVal;
+                return matchesSearch && matchesType;
+            });
+
+            // Sorting logic
+            if (sortVal === 'nirf') filtered.sort((a, b) => a.nirf - b.nirf);
+            if (sortVal === 'package') filtered.sort((a, b) => b.avgPackage - a.avgPackage);
+            if (sortVal === 'fee') filtered.sort((a, b) => a.fees - b.fees);
+
+            const grid = document.getElementById('directoryGrid');
+            grid.innerHTML = '';
+
+            filtered.forEach(college => {
+                const card = document.createElement('div');
+                card.className = "p-5 rounded-3xl bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-4";
+                card.innerHTML = `
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="px-2.5 py-0.5 text-[10px] font-bold rounded-full bg-brand-100 text-brand-700 dark:bg-brand-900/50 dark:text-brand-300">${college.type}</span>
+                            <span class="text-xs font-extrabold text-slate-400">NIRF #${college.nirf}</span>
+                        </div>
+                        <h3 class="font-extrabold text-base text-slate-900 dark:text-slate-100">${college.name}</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400"><i class="fa-solid fa-location-dot text-brand-500 mr-1"></i>${college.location}</p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 p-3 rounded-2xl bg-slate-50 dark:bg-slate-900 text-center text-xs">
+                        <div>
+                            <span class="text-[10px] text-slate-400 block">Avg Package</span>
+                            <span class="font-bold text-emerald-600 dark:text-emerald-400">₹${college.avgPackage} LPA</span>
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-slate-400 block">Total Fees</span>
+                            <span class="font-bold text-slate-800 dark:text-slate-200">₹${college.fees} Lakhs</span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center space-x-2 pt-2">
+                        <button onclick="openModal('${college.id}')" class="w-full py-2.5 text-xs font-bold rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 text-slate-800 dark:text-slate-100 transition-colors">
+                            View Cutoffs & Details
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function openModal(collegeId) {
+            const college = collegeDatabase.find(c => c.id === collegeId);
+            if (!college) return;
+
+            document.getElementById('modalCollegeName').innerText = college.name;
+            document.getElementById('modalTypeBadge').innerText = college.type;
+            document.getElementById('modalLocation').innerHTML = `<i class="fa-solid fa-location-dot text-brand-500 mr-1"></i> ${college.location}`;
+            document.getElementById('modalNIRF').innerText = `#${college.nirf}`;
+            document.getElementById('modalAvgPkg').innerText = `₹${college.avgPackage} LPA`;
+            document.getElementById('modalFees').innerText = `₹${college.fees} L`;
+            document.getElementById('modalPathway').innerText = college.pathway;
+
+            // Render Cutoffs
+            const cutoffList = document.getElementById('modalCutoffsList');
+            cutoffList.innerHTML = Object.keys(college.cutoffs).map(branch => {
+                const openCutoff = college.cutoffs[branch]['OPEN'];
+                return `
+                    <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800">
+                        <span class="font-bold text-slate-800 dark:text-slate-200">${branch} Engineering</span>
+                        <span class="font-semibold text-brand-600 dark:text-brand-400">${openCutoff}%ile (Gen Cutoff)</span>
+                    </div>
+                `;
+            }).join('');
+
+            // Recruiters
+            document.getElementById('modalRecruiters').innerHTML = college.recruiters.map(r => `
+                <span class="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold text-[11px]">${r}</span>
+            `).join('');
+
+            // Compare Btn Handler
+            const compareBtn = document.getElementById('modalCompareBtn');
+            const isCompared = compareList.includes(college.id);
+            compareBtn.innerText = isCompared ? 'Remove from Compare' : 'Add to Compare';
+            compareBtn.onclick = () => {
+                toggleCompare(college.id);
+                closeModal();
+            };
+
+            const modal = document.getElementById('detailModal');
+            const card = document.getElementById('modalCard');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                card.classList.remove('scale-95');
+                card.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('detailModal');
+            const card = document.getElementById('modalCard');
+            card.classList.remove('scale-100');
+            card.classList.add('scale-95');
+            modal.classList.add('opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 200);
+        }
+
+        // Theme Toggle Setup
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+        });
+
+        // Initialize Application
+        window.onload = function() {
+            runPredictor();
+            updateCompareBadge();
+        }
+    </script>
+</body>
+</html>
